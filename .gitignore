@@ -3,5 +3,7 @@
 .pptx
 .JPG
 .pem
+.pup
+chave-vm1
 terraform.tfstate
 terraform.tfstate.backup
