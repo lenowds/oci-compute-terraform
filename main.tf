@@ -158,6 +158,7 @@ resource "oci_core_instance" "webserver2" {
 }
 
 resource "oci_load_balancer" "test_load_balancer" {
+    depends_on = [oci_core_virtual_network.tcb_vcn, oci_core_subnet.tcb_subnet]
     compartment_id = var.compartment_ocid
     display_name = "lb_tcb"
     shape = "10Mbps"
@@ -185,6 +186,7 @@ resource "oci_load_balancer_backendset" "test_backend_set" {
 }
 
 resource "oci_load_balancer_backend" "backend-ws1" {
+    depends_on = [oci_core_instance.webserver1]
     backendset_name = oci_load_balancer_backendset.test_backend_set.name
     ip_address = oci_core_instance.webserver1.private_ip
     load_balancer_id = oci_load_balancer.test_load_balancer.id
@@ -192,6 +194,7 @@ resource "oci_load_balancer_backend" "backend-ws1" {
 }
 
 resource "oci_load_balancer_backend" "backend-ws2" {
+    depends_on = [oci_core_instance.webserver2]
     backendset_name = oci_load_balancer_backendset.test_backend_set.name
     ip_address = oci_core_instance.webserver2.private_ip
     load_balancer_id = oci_load_balancer.test_load_balancer.id
@@ -204,5 +207,4 @@ resource "oci_load_balancer_listener" "test_listener" {
     name = "listener-lb-tcb"
     port = "80"
     protocol = "HTTP"
-    
 }
