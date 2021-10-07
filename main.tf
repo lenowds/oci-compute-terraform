@@ -157,21 +157,21 @@ resource "oci_core_instance" "webserver2" {
   }
 }
 
-resource "oci_load_balancer_load_balancer" "test_load_balancer" {
+resource "oci_load_balancer" "test_load_balancer" {
     compartment_id = var.compartment_ocid
     display_name = "lb_tcb"
-    shape = "100Mbps"
+    shape = "10Mbps"
     subnet_ids = [oci_core_subnet.tcb_subnet.id]
     is_private = false
     network_security_group_ids = [oci_core_virtual_network.tcb_vcn.id]
     
     shape_details {
-        maximum_bandwidth_in_mbps = "100"
-        minimum_bandwidth_in_mbps = "100"
+        maximum_bandwidth_in_mbps = "10"
+        minimum_bandwidth_in_mbps = "10"
     }
 }
 
-resource "oci_load_balancer_backend_set" "test_backend_set" {
+resource "oci_load_balancer_backendset" "test_backend_set" {
     health_checker {
         protocol = "TCP"
         interval_ms = "10000"
@@ -179,7 +179,7 @@ resource "oci_load_balancer_backend_set" "test_backend_set" {
         retries = "3"
         timeout_in_millis = "3000"
     }
-    load_balancer_id = oci_load_balancer_load_balancer.test_load_balancer.id
+    load_balancer_id = oci_load_balancer.test_load_balancer.id
     name = "bs-lb-tcb"
     policy = "LEAST_CONNECTIONS"
 }
@@ -187,20 +187,20 @@ resource "oci_load_balancer_backend_set" "test_backend_set" {
 resource "oci_load_balancer_backend" "backend-ws1" {
     backendset_name = oci_load_balancer_backend_set.test_backend_set.name
     ip_address = oci_core_instance.webserver1.private_ip
-    load_balancer_id = oci_load_balancer_load_balancer.test_load_balancer.id
+    load_balancer_id = oci_load_balancer.test_load_balancer.id
     port = "80"
 }
 
 resource "oci_load_balancer_backend" "backend-ws2" {
-    backendset_name = oci_load_balancer_backend_set.test_backend_set.name
+    backendset_name = oci_load_balancer_backendset.test_backend_set.name
     ip_address = oci_core_instance.webserver2.private_ip
-    load_balancer_id = oci_load_balancer_load_balancer.test_load_balancer.id
+    load_balancer_id = oci_load_balancer.test_load_balancer.id
     port = "80"
 }
 
 resource "oci_load_balancer_listener" "test_listener" {
-    default_backend_set_name = oci_load_balancer_backend_set.test_backend_set.name
-    load_balancer_id = oci_load_balancer_load_balancer.test_load_balancer.id
+    default_backend_set_name = oci_load_balancer_backendset.test_backend_set.name
+    load_balancer_id = oci_load_balancer.test_load_balancer.id
     name = "listener-lb-tcb"
     port = "80"
     protocol = "HTTP"
