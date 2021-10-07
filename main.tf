@@ -158,30 +158,22 @@ resource "oci_core_instance" "webserver2" {
 }
 
 resource "oci_load_balancer_load_balancer" "test_load_balancer" {
-    #Required
     compartment_id = var.compartment_ocid
     display_name = "lb_tcb"
     shape = "100Mbps"
     subnet_ids = [oci_core_subnet.tcb_subnet.id]
-
-    #Optional
     is_private = false
     network_security_group_ids = [oci_core_virtual_network.tcb_vcn.id]
     
     shape_details {
-        #Required
         maximum_bandwidth_in_mbps = "100"
         minimum_bandwidth_in_mbps = "100"
     }
 }
 
 resource "oci_load_balancer_backend_set" "test_backend_set" {
-    #Required
     health_checker {
-        #Required
         protocol = "TCP"
-
-        #Optional
         interval_ms = "10000"
         port = "80"
         retries = "3"
@@ -193,7 +185,6 @@ resource "oci_load_balancer_backend_set" "test_backend_set" {
 }
 
 resource "oci_load_balancer_backend" "backend-ws1" {
-    #Required
     backendset_name = oci_load_balancer_backend_set.test_backend_set.name
     ip_address = oci_core_instance.webserver1.private_ip
     load_balancer_id = oci_load_balancer_load_balancer.test_load_balancer.id
@@ -201,7 +192,6 @@ resource "oci_load_balancer_backend" "backend-ws1" {
 }
 
 resource "oci_load_balancer_backend" "backend-ws2" {
-    #Required
     backendset_name = oci_load_balancer_backend_set.test_backend_set.name
     ip_address = oci_core_instance.webserver2.private_ip
     load_balancer_id = oci_load_balancer_load_balancer.test_load_balancer.id
@@ -209,7 +199,6 @@ resource "oci_load_balancer_backend" "backend-ws2" {
 }
 
 resource "oci_load_balancer_listener" "test_listener" {
-    #Required
     default_backend_set_name = oci_load_balancer_backend_set.test_backend_set.name
     load_balancer_id = oci_load_balancer_load_balancer.test_load_balancer.id
     name = "listener-lb-tcb"
