@@ -159,7 +159,7 @@ resource "oci_core_instance" "webserver2" {
 
 resource "oci_load_balancer_load_balancer" "test_load_balancer" {
     #Required
-    compartment_id = var.compartment_id
+    compartment_id = var.compartment_ocid
     display_name = "lb_tcb"
     shape = "100Mbps"
     subnet_ids = [oci_core_subnet.tcb_subnet.id]
