@@ -185,7 +185,7 @@ resource "oci_load_balancer_backendset" "test_backend_set" {
 }
 
 resource "oci_load_balancer_backend" "backend-ws1" {
-    backendset_name = oci_load_balancer_backend_set.test_backend_set.name
+    backendset_name = oci_load_balancer_backendset.test_backend_set.name
     ip_address = oci_core_instance.webserver1.private_ip
     load_balancer_id = oci_load_balancer.test_load_balancer.id
     port = "80"
