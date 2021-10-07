@@ -2,8 +2,12 @@
 .terraform.lock.hcl
 .pptx
 .JPG
+.png
 .pem
 .pup
+.pdf
+.doc
+.dot
 chave-vm1
 terraform.tfstate
 terraform.tfstate.backup
