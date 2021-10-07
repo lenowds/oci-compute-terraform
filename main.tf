@@ -204,4 +204,5 @@ resource "oci_load_balancer_listener" "test_listener" {
     name = "listener-lb-tcb"
     port = "80"
     protocol = "HTTP"
+    
 }
